@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/mod_group_name"
+        android:hint="@string/new_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="14dp"
+        android:layout_alignParentTop="true"
+        />
+
+    <EditText
+        android:id="@+id/mod_group_icon"
+        android:hint="@string/new_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/mod_group_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/mod_group_noti"
+        android:hint="@string/new_noti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/mod_group_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/mod_group_save"
+        android:text="@string/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="save"
+        android:layout_marginLeft="36dp"
+        android:layout_marginStart="36dp"
+        android:layout_alignTop="@+id/mod_group_name"
+        android:layout_toRightOf="@+id/mod_group_name"
+        android:layout_toEndOf="@+id/mod_group_name" />
+
+    <Button
+        android:id="@+id/mod_group_cancell"
+        android:text="@string/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Cancel"
+        android:layout_alignBottom="@+id/mod_group_noti"
+        android:layout_alignLeft="@+id/mod_group_save"
+        android:layout_alignStart="@+id/mod_group_save"
+        android:layout_marginBottom="22dp" />
+
+
+</RelativeLayout>

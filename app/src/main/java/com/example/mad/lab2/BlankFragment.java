@@ -1,0 +1,363 @@
+package com.example.mad.lab2;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.app.Fragment;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class BlankFragment extends Fragment {
+
+    public BlankFragment(){};
+    android.widget.ListView ListView;
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference mDatabaseReference = database.getReference();
+    //Stiben
+    Button CloSes;
+
+    final ArrayList group_list = new ArrayList();
+    int update_count=0;
+    TextView total_debit;
+
+    int total_groups_joined;
+    boolean same_currency_joined=false;
+    float contador_currency_joined=0;
+    String temporal_currency_joined=""; //voy a contar todos los iguales, 1==2, 2==3, 4==5 ... y cada acierto se suma en contador currency, si es igual a contador items entonces todos tienen el mismo currency
+    float contador_groups=0;
+
+
+    private View V;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+
+
+
+        V= inflater.inflate(R.layout.fragment_blank, container, false);
+
+
+
+        FloatingActionButton fab = (FloatingActionButton) V.findViewById(R.id.add_groupF);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(view.getContext(), new_group_activity.class);
+                startActivity(i);
+
+            }
+        });
+
+
+
+        //Stiben
+        final FloatingActionButton update = (FloatingActionButton) V.findViewById(R.id.update_button);
+
+        update.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                getActivity().getFragmentManager().popBackStack();
+                //finish();
+                //startActivity(getIntent());
+
+            }
+        });
+
+
+
+        //Stiben
+        CloSes = (Button) V.findViewById(R.id.clos_ses);
+        CloSes.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getActivity(), login_new_user.class));
+                //finish();
+
+            }
+        });
+        //
+
+        //daniel1
+
+        ////PENDIENTES
+        ///SACAR LA LISTA DE GRUPOS Q SE TIENEN
+
+        Firebase.setAndroidContext(getActivity());
+        FirebaseAuth mAuth;
+        mAuth = FirebaseAuth.getInstance();
+        final String userID=mAuth.getCurrentUser().getUid();
+        final HashMap<String,HashMap<String,String>> data_items = new HashMap<>();
+
+        Firebase firebase = new Firebase(Config.FIREBASE_URL).child("Users").child(userID).child("groups");
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                //daniel dormido
+                total_groups_joined= (int) snapshot.getChildrenCount();
+                //daniel dormido end
+                Log.d("~~total groups joined~~", String.valueOf(total_groups_joined));
+
+
+                group_list.clear();
+                String groupID;
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+
+                    groupID=postSnapshot.child("groupID").getValue().toString();
+                    Log.d("~~groupID~~", groupID);
+                    group_list.add(groupID);
+
+                }
+
+
+                Log.d("~~GROUP LIST~~", String.valueOf(group_list.size()));
+
+                final ArrayList<groups_class> data_groups2 = new ArrayList<groups_class>();
+                final ArrayList<doubts_class> data_doubts= new ArrayList<doubts_class>();
+                final groups_adapter adapter = new groups_adapter(getActivity(), R.layout.listview_groups_row, data_groups2,data_doubts);
+
+                // MOSTRAR LOS GRUPOS Q SE SACARON DE LA LISTA EN EL LIST
+                Firebase.setAndroidContext(getActivity());
+                Firebase firebase2 = new Firebase(Config.FIREBASE_URL).child("Groups");
+
+
+                if (total_groups_joined>0) {
+
+                    firebase2.addValueEventListener(new ValueEventListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+
+                        public void onDataChange(DataSnapshot snapshot) {
+                            data_groups2.clear();
+                            data_doubts.clear();
+
+                            float all_doubts = 0;
+
+                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+
+                                //Log.d("168: ", group_list.toString() +" "+ postSnapshot.getKey().toString()+ ""+(group_list.contains(postSnapshot.getKey().toString())));
+                                if (group_list.contains(postSnapshot.getKey().toString())) {
+
+                                    HashMap<String, Object> Items_2 = (HashMap<String, Object>) postSnapshot.child("Items").getValue();
+                                    String noti = postSnapshot.child("noti").getValue().toString();
+                                    int icon = postSnapshot.child("icon").getValue(int.class);
+
+                                    String title = postSnapshot.child("title").getValue().toString();
+                                    String groupID = postSnapshot.child("groupID").getValue().toString();
+                                    groups_class group2 = new groups_class(groupID, noti, icon, title, Items_2);
+
+
+                                    //TOTAL PRICE OF GROUP
+
+                                    HashMap<String, String> items_price = (HashMap<String, String>) postSnapshot.child("Items").getValue();
+                                    float total_price = 0;
+
+                                    boolean same_currency = false;
+                                    float contador_currency = 0;
+                                    String temporal_currency = ""; //voy a contar todos los iguales, 1==2, 2==3, 4==5 ... y cada acierto se suma en contador currency, si es igual a contador items entonces todos tienen el mismo currency
+                                    float contador_items = 0;
+
+                                    for (DataSnapshot postSnapshot2 : postSnapshot.child("Items").getChildren()) {
+                                        //total_price=total_price+Float.parseFloat(postSnapshot2.child("price").getValue().toString());
+
+                                        ///////////////// Convert currencies
+                                        String cur = (String) postSnapshot2.child("currency").getValue();
+                                        String[] arrayCurrencies = {"EUR", "US", "COP", "GBP", "AUD", "CHF", "AED", "HRK"};
+                                        String[] arrayCurValues = {"1.0", "0.92", "0.00031", "1.19", "0.68", "0.91", "0.25", "0.13"};
+
+                                        for (int i = 0; i < arrayCurrencies.length; i++) {
+                                            if (cur.equals(arrayCurrencies[i])) {
+                                                float f = Float.parseFloat(arrayCurValues[i]);
+                                                total_price = total_price + (Float.parseFloat((String) postSnapshot2.child("price").getValue())) * f;
+                                            }
+                                        }
+                                        /////////////////
+                                        Log.d("1:",temporal_currency);
+                                        Log.d("2:", postSnapshot2.child("currency").getValue().toString());
+                                        if (Objects.equals(temporal_currency, postSnapshot2.child("currency").getValue().toString())) {
+                                            contador_currency = contador_currency + 1;
+                                        }
+                                        temporal_currency = postSnapshot2.child("currency").getValue().toString();
+                                        contador_items = contador_items + 1;
+                                    }
+
+                                    if ((contador_items - 1) == contador_currency) {
+                                        same_currency = true;
+
+
+                                        //daniel dormido
+                                        contador_currency_joined += 1;
+                                        //daniel dormido end
+                                    }
+                                    //daniel dormido
+                                    contador_groups += 1;
+
+
+                                    //SI CONTADOR DE CURRENCY ES IGUAL A NUMERO DE GRUPOS JOINED IMPRIMIR CUALQUIER CURRENCY, SINO IMPRIMIR EN ROMO MIXED.
+
+                                    //   if (contador_currency_joined==contador_groups){
+                                    //       Toast.makeText(MainActivity.this,"son igualiticos",Toast.LENGTH_SHORT).show();
+                                    //   }
+                                    //daniel dormido end
+                                    //TOTAL MEMBERS
+
+                                    float total_members = postSnapshot.child("members").getChildrenCount();
+                                    ;
+
+                                    float divided_price = 0;
+                                    if (total_members != 0) {
+                                        divided_price = total_price / total_members;
+                                    }
+
+
+                                    //check if I had paid
+
+                                    boolean paid;
+                                    try {
+                                        paid = Boolean.parseBoolean(postSnapshot.child("members").child(userID).child("paid").getValue().toString());
+                                    } catch (Exception e) {
+                                        paid = false;
+                                    }
+
+                                    if (paid == false) {
+                                        all_doubts = all_doubts + divided_price;
+
+                                    }
+                                    //paid_boolean.add(paid);
+
+                                    data_groups2.add(group2);
+                                    //data_doubts.add(new doubts_class(total_price,divided_price));
+
+                                    if (same_currency) {
+
+                                        data_doubts.add(new doubts_class(total_price, divided_price, temporal_currency, paid));
+                                    } else {
+                                        data_doubts.add(new doubts_class(total_price, divided_price, paid));
+                                    }
+
+
+                                    ListView = (ListView) V.findViewById(R.id.group_list);
+                                    ListView.setAdapter(adapter);
+
+
+                                }
+
+
+                            }
+
+                            total_debit = (TextView) V.findViewById(R.id.total_debit);
+                            //total_debit.setText(String.valueOf(all_doubts));
+                            total_debit.setText(String.format("%.2f", all_doubts));
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+                }
+
+
+                //daniel1 fin
+
+
+                //Creating the adapter
+                ListView = (ListView) V.findViewById(R.id.group_list);
+
+
+                View header = (View) getActivity().getLayoutInflater().inflate(R.layout.list_header_row, null);
+                ListView.addHeaderView(header);
+                ListView.setAdapter(adapter);
+
+
+                ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        TextView v = (TextView) view.findViewById(R.id.text1);
+                        TextView groupID =(TextView) view.findViewById(R.id.groupID);
+                        try {
+                            Intent i = new Intent(view.getContext(), Items_activity.class);
+                            i.putExtra("GroupID", groupID.getText());
+                            i.putExtra("GroupName", v.getText());
+                            startActivity(i);
+                        }catch (Exception e){
+
+                        }
+
+
+                    }
+                });
+
+
+
+
+                update_count=update_count+1; //
+                // if (update_count>1) {
+
+                //update.setVisibility(View.VISIBLE);
+                //finish();
+                // startActivity(getActivity());
+                //Toast.makeText(getApplicationContext(),"Your group list has changed", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),getString(R.string.group_changed), Toast.LENGTH_SHORT).show();
+                // }
+            }
+            @Override
+            public void onCancelled(FirebaseError error) {
+            }
+
+        });
+
+
+
+
+
+
+        // MOSTRAR EL USERID
+
+        Firebase.setAndroidContext(getActivity());
+        //daniel2 fin
+        //Stiben
+        mAuth = FirebaseAuth.getInstance();
+
+        TextView userID_tv = (TextView) V.findViewById(R.id.userID);
+        //userID_tv.setText(getString("Welcome: " + mAuth.getCurrentUser().getEmail());
+        userID_tv.setText(getString(R.string.welcome) + mAuth.getCurrentUser().getEmail());
+        //userID_tv.setVisibility(View.GONE);
+
+        //return inflater.inflate(R.layout.fragment_blank, container, false);
+        return V;
+    }
+
+
+
+}

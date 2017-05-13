@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.example.mad.lab2.Items_activity"
+    android:descendantFocusability="blocksDescendants"
+    android:weightSum="1">
+
+    <ListView
+        android:id="@+id/lista2"
+        android:layout_width="match_parent"
+        android:layout_height="302dp">
+    </ListView>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/lista2"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="0.18"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="#ff0000ff"
+        app:elevation="12dp"
+        app:fabSize="mini" />
+
+    <TextView
+        android:id="@+id/member_pay_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total debit"
+        android:layout_above="@+id/textView3"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:layout_marginBottom="11dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="68dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/paid_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="36dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:text="Divided debit" />
+
+    <TextView
+        android:id="@+id/Paid_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Empty group"
+        android:layout_above="@+id/paid_button"
+        android:layout_alignRight="@+id/fab_item"
+        android:layout_alignEnd="@+id/fab_item"
+        android:layout_marginBottom="14dp" />
+
+    <Button
+        android:id="@+id/paid_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="Have you paid ?" />
+
+    <TextView
+        android:id="@+id/total_debit_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/member_pay_status"
+        android:layout_alignBottom="@+id/member_pay_status"
+        android:layout_alignLeft="@+id/divided_debit_items"
+        android:layout_alignStart="@+id/divided_debit_items"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/divided_debit_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/textView3"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp" />
+
+    <TextView
+        android:id="@+id/euro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="€"
+        android:layout_alignBaseline="@+id/total_debit_items"
+        android:layout_alignBottom="@+id/total_debit_items"
+        android:layout_toRightOf="@+id/total_debit_items"
+        android:layout_toEndOf="@+id/total_debit_items"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp" />
+
+    <TextView
+        android:id="@+id/euro2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="€"
+        android:layout_alignBaseline="@+id/divided_debit_items"
+        android:layout_alignBottom="@+id/divided_debit_items"
+        android:layout_toEndOf="@+id/divided_debit_items"
+        android:layout_alignLeft="@+id/euro"
+        android:layout_alignStart="@+id/euro" />
+
+</RelativeLayout>

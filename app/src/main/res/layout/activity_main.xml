@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.mad.lab2.MainActivity">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/update_button"
+        android:layout_width="163dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/clos_ses"
+        android:layout_marginEnd="19dp"
+        android:layout_marginRight="19dp"
+        android:layout_toLeftOf="@+id/add_groupF"
+        android:layout_toStartOf="@+id/add_groupF"
+        android:layout_weight="0.00"
+        android:clickable="true"
+        android:visibility="visible"
+        app:backgroundTint="@color/colorAccent"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/reload" />
+
+    <TextView
+        android:id="@+id/userID"
+        android:text="@string/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="false"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <ListView
+        android:id="@+id/group_list"
+        android:layout_width="match_parent"
+        android:layout_height="339dp"
+        android:layout_below="@+id/userID"></ListView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_groupF"
+        android:layout_width="71dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_weight="0.01"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add"
+        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_alignTop="@+id/total_debit"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/clos_ses"
+        android:text="@string/clo_ses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/total_debit"
+        android:layout_toStartOf="@+id/total_debit" />
+
+    <TextView
+        android:id="@+id/total_debit"
+        android:text="@string/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/group_list"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/total_debit_text"
+        android:text="@string/total_deb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/total_debit"
+        android:layout_alignBottom="@+id/total_debit"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_toLeftOf="@+id/total_debit"
+        android:layout_toStartOf="@+id/total_debit"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/euro3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="€"
+        android:layout_alignBottom="@+id/total_debit"
+        android:layout_toRightOf="@+id/total_debit"
+        android:layout_toEndOf="@+id/total_debit"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:textSize="20dp" />
+
+
+</RelativeLayout>
